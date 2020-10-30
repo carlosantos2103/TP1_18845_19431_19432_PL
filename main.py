@@ -11,7 +11,7 @@ states = (
 
 
 def t_RESULT(t):
-    r"""[a-z ]+"""
+    r"""[a-z ]+"""  # TODO: por "\t*" antes por causa dos subtestes?
     if "o" in t.value:
         t.value = t.value[:-1]
     t.lexer.begin("stage")
@@ -29,13 +29,8 @@ def t_stage_STAGE(t):
     return t
 
 
-def t_comment_DIVISION(t):
-    r"""[ -]+"""
-    return t
-
-
-def t_comment_COMMENT(t):  # Ignores Everything that isnt a RESULT (ok/notok)
-    r"""[a-zA-Z0-9 ]+\n"""
+def t_comment_COMMENT(t):  # TODO: Nao tenho a certeza se o comentario pode continuar na linha de baixo
+    r"""[a-zA-Z0-9 ]+\n([ ]+[^#][a-zA-Z0-9 ]+\n)*|\n"""
     t.lexer.begin("INITIAL")
     return t
 
@@ -58,7 +53,10 @@ t_comment_ignore = " - "
 t_stage_ignore = ""
 
 lexer = lex.lex()
-lexer.input(readFile("testes/teste7.t"))
+lexer.input(readFile("testes/teste2.t"))
 
 for token in iter(lexer.token, None):
-    print(token)
+    if token.type == "RESULT":
+        print(token.value, end=" ")
+    if token.type == "STAGE":
+        print(token.value)
