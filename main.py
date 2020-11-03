@@ -8,18 +8,22 @@ from utils import readFile
 # ok 3 - Third test on something else
 # ok 4 - Fourth test
 
-ficheiros = ["teste3.t", "NULL"]
-
-tokens = ("TOTAL_TESTE", "ESTADO_TESTE", "NUMERO", "COMENTARIO")
+tokens = ("TOTAL_TESTE", "ESTADO_TESTE", "NUMERO", "DESCRICAO", "COMENTARIO")
 
 states = (
     ("numero", "exclusive"),
-    ("comentario", "exclusive"),
+    ("descricao", "exclusive"),
 )
 
 
 def t_TOTAL_TESTE(t):  # 1..41
     r"""[0-9 ]+..[0-9]+"""
+    return t
+
+
+def t_COMENTARIO(t):  # # Comentario
+    r"""[ ]*[# ][a-zA-Z0-9: ]+\n"""
+    t.value = t.value.replace("\n", "")
     return t
 
 
@@ -35,14 +39,14 @@ def t_ESTADO_TESTE(t):  # ok/not ok
 def t_numero_NUMERO(t):  # 1/2/3
     r"""[0-9]+"""
     t.value = int(t.value)
-    t.lexer.begin("comentario")
+    t.lexer.begin("descricao")
     return t
 
 
-def t_comentario_COMENTARIO(t):
-    # r"""[^\n]*\n""" \n --- \n   # asdasdas
-    r"""\n[ ]*[# ][a-zA-Z0-9: ]+\n|[a-zA-Z0-9: ]*\n"""
+def t_descricao_DESCRICAO(t):  # - correu bem
+    r"""[a-zA-Z0-9: ]*\n([    ][a-zA-Z0-9: ]*\n)*"""
     t.lexer.begin("INITIAL")
+    t.value = t.value.replace("\n", "")
     return t
 
 
@@ -51,8 +55,8 @@ def t_error(t):
     exit(1)
 
 
-def t_comentario_error(t):
-    print("ERROR comentario: \n" + t.value)
+def t_descricao_error(t):
+    print("ERROR descricao: \n" + t.value)
     exit(1)
 
 
@@ -63,18 +67,13 @@ def t_numero_error(t):
 
 t_ignore = "\n"
 t_numero_ignore = ""
-t_comentario_ignore = " - "
+t_descricao_ignore = " - "
 
 lexer = lex.lex()
 
-lista = []
+nome_ficheiro = "testes/teste3.t"
+lexer.input(readFile(nome_ficheiro))
 
-nome_ficheiro = ""
-i = 0
-while ficheiros[i] != "NULL":
-    nome_ficheiro = ficheiros[i]
-    lexer.input(readFile(nome_ficheiro))
-    print(f"\n############ Ficheiro Nº{i + 1} ############\n")
-    for token in iter(lexer.token, None):
-        print(token)
-    i += 1
+print(f"\n############ {nome_ficheiro} ############\n")
+for token in iter(lexer.token, None):
+    print(token)
