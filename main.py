@@ -41,6 +41,15 @@ def t_numero_NUMERO(t):  # 1/2/3
     t.lexer.begin("descricao")
     return t
 
+def t_descricao_ESTADO_TESTE(t):
+    r"""[not ]*ok"""
+    return t
+
+def t_descricao_NUMERO(t):
+    r"""[0-9]+"""
+    t.value = int(t.value)
+    t.lexer.begin("INITIAL")
+    return t
 
 def t_descricao_DESCRICAO(t):  # - correu bem
     r"""[a-zA-Z0-9: ]*\n([    ][a-zA-Z0-9: ]*\n)*"""
@@ -70,7 +79,7 @@ t_descricao_ignore = " - "
 
 lexer = lex.lex()
 
-nome_ficheiro = "testes/teste3.t"
+nome_ficheiro = "testes/teste5.t"
 lexer.input(readFile(nome_ficheiro))
 
 print(f"\n############ {nome_ficheiro} ############\n")
