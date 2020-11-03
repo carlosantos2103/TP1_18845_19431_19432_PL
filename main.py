@@ -2,6 +2,7 @@
 # main.py
 
 import ply.lex as lex
+import re
 from utils import readFile
 
 # 1..4
@@ -24,7 +25,7 @@ def t_TOTAL_TESTE(t):  # 1..41
 
 
 def t_COMENTARIO(t):  # # Comentario
-    r"""[ ]*[# ][a-zA-Z0-9:'. ]+\n"""  # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
+    r"""[ ]*[# ][a-zA-Z0-9:'.() ]+\n"""  # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
     t.value = t.value.replace("\n", "")
     return t
 
@@ -51,10 +52,10 @@ def t_descricao_NUMERO(t):
     t.lexer.begin("INITIAL")
     return t
 
-def t_descricao_DESCRICAO(t):  # - correu bem
-    r"""[a-zA-Z0-9: ]*\n([    ][a-zA-Z0-9: ]*\n)*"""
+def t_desricao_NUMERO(t):  # 1/2/3
+    r"""[0-9]+"""
+    t.value = int(t.value)
     t.lexer.begin("INITIAL")
-    t.value = t.value.replace("\n", "")
     return t
 
 
@@ -75,13 +76,16 @@ def t_numero_error(t):
 
 t_ignore = "\n"
 t_numero_ignore = " "
-t_descricao_ignore = " - "
+t_descricao_ignore = ""
 
 lexer = lex.lex()
 
 nome_ficheiro = "testes/teste5.t"
 lexer.input(readFile(nome_ficheiro))
-
 print(f"\n############ {nome_ficheiro} ############\n")
 for token in iter(lexer.token, None):
+    if token.type == "TOTAL_TESTE":
+        captures = re.fullmatch(r"""([ ]*)[0-9]+..([0-9]+)""", token.value)
+        print(f"{captures.group(1)}Total testes: {captures.group(2)}")
+
     print(token)
