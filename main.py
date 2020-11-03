@@ -1,4 +1,6 @@
-# Trabalho_Pratico v1.0
+# Trabalho_Pratico 1 - PL 2020/21
+# main.py
+
 import ply.lex as lex
 from utils import readFile
 
@@ -22,18 +24,15 @@ def t_TOTAL_TESTE(t):  # 1..41
 
 
 def t_COMENTARIO(t):  # # Comentario
-    r"""[ ]*[# ][a-zA-Z0-9: ]+\n"""
+    r"""[ ]*[# ][a-zA-Z0-9:'. ]+\n"""  # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
     t.value = t.value.replace("\n", "")
     return t
 
 
 def t_ESTADO_TESTE(t):  # ok/not ok
-    r"""[o|k|n| |t]+"""
-    if "o" in t.value:
-        t.value = t.value[:-1]
-        t.lexer.begin("numero")
-        return t
-    pass
+    r"""[not ]*ok"""
+    t.lexer.begin("numero")
+    return t
 
 
 def t_numero_NUMERO(t):  # 1/2/3
@@ -66,7 +65,7 @@ def t_numero_error(t):
 
 
 t_ignore = "\n"
-t_numero_ignore = ""
+t_numero_ignore = " "
 t_descricao_ignore = " - "
 
 lexer = lex.lex()
