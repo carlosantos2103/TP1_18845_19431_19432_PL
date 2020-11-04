@@ -4,12 +4,11 @@
 import ply.lex as lex
 import re
 from utils import readFile
+from utils import writeFile
+from utils import clearFile
+from string import Template
 
-# 1..4
-# ok 1 - First test to something
-# not ok 2 - Something else being tested
-# ok 3 - Third test on something else
-# ok 4 - Fourth test
+html_file = "teste.html"
 
 tokens = ("TOTAL_TESTE", "ESTADO_TESTE", "NUMERO", "DESCRICAO", "COMENTARIO")
 
@@ -26,7 +25,7 @@ def t_TOTAL_TESTE(t):  # 1..41
 
 def t_COMENTARIO(t):  # # Comentario
     r"""[ ]*[# ][a-zA-Z0-9:'.() ]+\n"""  # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
-    t.value = t.value.replace("\n", "")
+    t.value = t.value.replace("\n", "<br>")
     return t
 
 
@@ -54,7 +53,7 @@ def t_descricao_ESTADO_TESTE(t):
 def t_descricao_DESCRICAO(t):  # - correu bem
     r"""[ -]*([a-zA-Z0-9: ]*\n)+|[ -]+"""
     t.lexer.begin("INITIAL")
-    t.value = t.value.replace("\n", "")
+    t.value = t.value.replace("\n", "<br>")
     t.value = t.value.replace(" - ", "")
     if not t.value or t.value == " ":
         pass
@@ -81,14 +80,20 @@ t_ignore = "\n"
 t_numero_ignore = " "
 t_descricao_ignore = ""
 
+nome_ficheiro = "testes/teste3.t"
+
+clearFile(html_file)
+writeFile(html_file, "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anything "
+                     "Protocol)</h1>\n<h2>Ficheiro: " + nome_ficheiro + "</h2>\n")
+
 lexer = lex.lex()
 
-nome_ficheiro = "testes/teste5.t"
 lexer.input(readFile(nome_ficheiro))
 print(f"\n############ {nome_ficheiro} ############\n")
 for token in iter(lexer.token, None):
-    if token.type == "TOTAL_TESTE":
-        captures = re.fullmatch(r"""([ ]*)[0-9]+..([0-9]+)""", token.value)
-        print(f"{captures.group(1)}Total testes: {captures.group(2)}")
-
+    writeFile(html_file, """<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(token.value) + " </span>")
     print(token)
+    if token.type == "TOTAL_TESTE":
+        writeFile(html_file, "</br>")
+
+writeFile(html_file, "</body>\n</html")
