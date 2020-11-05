@@ -96,4 +96,4 @@ for token in iter(lexer.token, None):
     if token.type == "TOTAL_TESTE":
         writeFile(html_file, "</br>")
 
-writeFile(html_file, "</body>\n</html")
+writeFile(html_file, "</body>\n</html>")
