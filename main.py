@@ -8,7 +8,7 @@ from utils import writeFile
 from utils import clearFile
 from string import Template
 
-html_file = "teste.html"
+testes = ["teste1.t", "teste2.t", "teste3.t", "teste4.t", "teste5.t", "teste6.t", "teste7.t", "NULL"]
 
 tokens = ("TOTAL_TESTE", "ESTADO_TESTE", "NUMERO", "DESCRICAO", "COMENTARIO")
 
@@ -81,19 +81,68 @@ t_numero_ignore = " "
 t_descricao_ignore = ""
 
 nome_ficheiro = "testes/teste3.t"
-
-clearFile(html_file)
-writeFile(html_file, "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anything "
-                     "Protocol)</h1>\n<h2>Ficheiro: " + nome_ficheiro + "</h2>\n")
-
 lexer = lex.lex()
 
-lexer.input(readFile(nome_ficheiro))
-print(f"\n############ {nome_ficheiro} ############\n")
-for token in iter(lexer.token, None):
-    writeFile(html_file, """<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(token.value) + " </span>")
-    print(token)
-    if token.type == "TOTAL_TESTE":
-        writeFile(html_file, "</br>")
+i=0
 
-writeFile(html_file, "</body>\n</html>")
+while testes[i] != "NULL":
+    if testes[i]== "NULL":
+        exit(0)
+    html_file = testes[i][:-1] + "html"
+    clearFile(html_file)
+    writeFile(html_file, "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anything "
+                     "Protocol)</h1>\n<h2>Ficheiro: " + testes[i] + "</h2>\n")
+    lexer.input(readFile(nome_ficheiro))
+    print(f"\n############ {testes[i]} ############\n")
+    for token in iter(lexer.token, None):
+        writeFile(html_file, """<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(token.value) + " </span>")
+        print(token)
+        if token.type == "TOTAL_TESTE":
+            writeFile(html_file, "</br>")
+# <a href="pagina01.html">Página01</a>
+    if i == 0:
+        writeFile(html_file, f"""<br> </br><a href= testes/"""+ testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 2] + """> """ + testes[i + 2] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 3] + """> """ + testes[i + 3] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 4] + """> """ + testes[i + 4] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 5] + """> """ + testes[i + 5] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 6] + """> """ + testes[i + 6] + """</a>\n""")
+    if i == 1:
+        writeFile(html_file, f"""<br> </br><a href= testes/""" + testes[i - 1] + """> """ + testes[i - 1] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 2] + """> """ + testes[i + 2] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 3] + """> """ + testes[i + 3] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 4] + """> """ + testes[i + 4] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 5] + """> """ + testes[i + 5] + """</a>\n""")
+    if i == 2:
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 2] + """> """ + testes[i - 2] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 1] + """> """ + testes[i - 1] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 2] + """> """ + testes[i + 2] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 3] + """> """ + testes[i + 3] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 4] + """> """ + testes[i + 4] + """</a>\n""")
+    if i == 3:
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 3] + """> """ + testes[i - 3] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 2] + """> """ + testes[i - 2] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 1] + """> """ + testes[i - 1] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 2] + """> """ + testes[i + 2] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 3] + """> """ + testes[i + 3] + """</a>\n""")
+    if i == 5:
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 5] + """> """ + testes[i - 5] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 4] + """> """ + testes[i - 4] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 3] + """> """ + testes[i - 3] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 2] + """> """ + testes[i - 2] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 1] + """> """ + testes[i - 1] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
+    if i == 6:
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 6] + """> """ + testes[i - 6] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 5] + """> """ + testes[i - 5] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 4] + """> """ + testes[i - 4] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 3] + """> """ + testes[i - 3] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 2] + """> """ + testes[i - 2] + """</a>\n""")
+        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 1] + """> """ + testes[i - 1] + """</a>\n""")
+
+    writeFile(html_file, "</body>\n</html>")
+    i+=1
+
