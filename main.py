@@ -99,7 +99,6 @@ while testes[i] != "NULL":
         print(token)
         if token.type == "TOTAL_TESTE":
             writeFile(html_file, "</br>")
-# <a href="pagina01.html">Página01</a>
     if i == 0:
         writeFile(html_file, f"""<br> </br><a href= testes/"""+ testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
         writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 2] + """> """ + testes[i + 2] + """</a>\n""")
