@@ -20,11 +20,13 @@ states = (
 
 def t_TOTAL_TESTE(t):  # 1..41
     r"""[0-9 ]+..[0-9]+"""
+    t.value = t.value + "<br>"
     return t
 
 
 def t_COMENTARIO(t):  # # Comentario
-    r"""[ ]*[# ][a-zA-Z0-9:'.() ]+\n"""  # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
+    r"""[ ]*[# ][a-zA-Z0-9:'.() ]+\n"""
+    # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
     t.value = t.value.replace("\n", "<br>")
     return t
 
@@ -51,14 +53,11 @@ def t_descricao_ESTADO_TESTE(t):
 
 
 def t_descricao_DESCRICAO(t):  # - correu bem
-    r"""[ -]*([a-zA-Z0-9: ]*\n)+|[ -]+"""
+    r"""[ -]+([a-zA-Z0-9: ]*\n)+|[ -]+|\n"""
     t.lexer.begin("INITIAL")
-    t.value = t.value.replace("\n", "<br>")
+    t.value = t.value.replace("\n", "")
     t.value = t.value.replace(" - ", "")
-    if not t.value or t.value == " ":
-        pass
-    else:
-        return t
+    return t
 
 
 def t_error(t):
@@ -76,72 +75,70 @@ def t_numero_error(t):
     exit(1)
 
 
+class Test:
+    def __init__(self, resultado="tba", numero=0, description="tba", nivel=0):
+        self.result = resultado
+        self.stage = numero
+        self.description = description
+        self.level = nivel
+
+
+lista = []
+
 t_ignore = "\n"
 t_numero_ignore = " "
 t_descricao_ignore = ""
 
+html_file = "teste.html"
 nome_ficheiro = "testes/teste3.t"
+clearFile(html_file)
+writeFile(html_file, "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anythin"
+                     "g Protocol)</h1>\n<h2>Ficheiro: " + nome_ficheiro + "</h2>\n")
 lexer = lex.lex()
+lexer.input(readFile(nome_ficheiro))
 
-i=0
+result = ""
+level = 0
+stage = ""
 
-while testes[i] != "NULL":
-    if testes[i]== "NULL":
-        exit(0)
-    html_file = testes[i][:-1] + "html"
-    clearFile(html_file)
-    writeFile(html_file, "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anything "
-                     "Protocol)</h1>\n<h2>Ficheiro: " + testes[i] + "</h2>\n")
-    lexer.input(readFile(nome_ficheiro))
-    print(f"\n############ {testes[i]} ############\n")
-    for token in iter(lexer.token, None):
-        writeFile(html_file, """<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(token.value) + " </span>")
-        print(token)
-        if token.type == "TOTAL_TESTE":
-            writeFile(html_file, "</br>")
-    if i == 0:
-        writeFile(html_file, f"""<br> </br><a href= testes/"""+ testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 2] + """> """ + testes[i + 2] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 3] + """> """ + testes[i + 3] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 4] + """> """ + testes[i + 4] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 5] + """> """ + testes[i + 5] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 6] + """> """ + testes[i + 6] + """</a>\n""")
-    if i == 1:
-        writeFile(html_file, f"""<br> </br><a href= testes/""" + testes[i - 1] + """> """ + testes[i - 1] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 2] + """> """ + testes[i + 2] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 3] + """> """ + testes[i + 3] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 4] + """> """ + testes[i + 4] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 5] + """> """ + testes[i + 5] + """</a>\n""")
-    if i == 2:
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 2] + """> """ + testes[i - 2] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 1] + """> """ + testes[i - 1] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 2] + """> """ + testes[i + 2] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 3] + """> """ + testes[i + 3] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 4] + """> """ + testes[i + 4] + """</a>\n""")
-    if i == 3:
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 3] + """> """ + testes[i - 3] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 2] + """> """ + testes[i - 2] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 1] + """> """ + testes[i - 1] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 2] + """> """ + testes[i + 2] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 3] + """> """ + testes[i + 3] + """</a>\n""")
-    if i == 5:
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 5] + """> """ + testes[i - 5] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 4] + """> """ + testes[i - 4] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 3] + """> """ + testes[i - 3] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 2] + """> """ + testes[i - 2] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 1] + """> """ + testes[i - 1] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i + 1] + """> """ + testes[i + 1] + """</a>\n""")
-    if i == 6:
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 6] + """> """ + testes[i - 6] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 5] + """> """ + testes[i - 5] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 4] + """> """ + testes[i - 4] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 3] + """> """ + testes[i - 3] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 2] + """> """ + testes[i - 2] + """</a>\n""")
-        writeFile(html_file,f"""<br> </br><a href= testes/""" + testes[i - 1] + """> """ + testes[i - 1] + """</a>\n""")
+for token in iter(lexer.token, None):
+    #     writeFile(html_file,
+    #               """\n\t<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(
+    #                   token.value) + " </span>")
+    if token.type == "ESTADO_TESTE":
+        level = token.value.count('    ') + 1
+        result = token.value[-2:]
+    if token.type == "NUMERO":
+        stage = token.value
+    if token.type == "DESCRICAO":
+        teste = Test(result, stage, token.value, level)
+        lista.append(teste)
 
-    writeFile(html_file, "</body>\n</html>")
-    i+=1
+    print(token)
 
+for teste in lista:
+    print(f"{teste.result}\t{teste.stage}\t{teste.description}\t{teste.level}")
+
+writeFile(html_file, "\n</body>\n</html>")
+
+# i = 0
+
+# while testes[i] != "NULL":
+#     if testes[i] == "NULL":
+#         exit(0)
+#     html_file = testes[i][:-1] + "html"
+#     clearFile(html_file)
+#     writeFile(html_file, "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anythin"
+#                          "g Protocol)</h1>\n<h2>Ficheiro: " + testes[i] + "</h2>\n")
+#     lexer.input(readFile("testes/" + testes[i]))
+#     print(f"\n############ {testes[i]} ############\n")
+#     for token in iter(lexer.token, None):
+#         writeFile(html_file,
+#                   """\n\t<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(
+#                       token.value) + " </span>")
+#         print(token)
+#     for j in range(7):
+#         writeFile(html_file,
+#                   f"""\n<br> </br><a href= """ + html_file + """> """ + testes[j] + """</a>""")
+#     writeFile(html_file, "\n</body>\n</html>")
+#     i += 1
