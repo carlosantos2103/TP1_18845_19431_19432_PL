@@ -109,10 +109,8 @@ for token in iter(lexer.token, None):
         level = token.value.count('    ') + 1
         if level == 1:
             result = token.value
-            print(result)
         else:
             result = token.value[(level-1)*4:]
-            print(result)
     if token.type == "NUMERO":
         stage = token.value
     if token.type == "DESCRICAO":
