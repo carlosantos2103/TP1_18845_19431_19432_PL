@@ -3,12 +3,19 @@
 
 import ply.lex as lex
 import re
+import sys
 from utils import readFile
 from utils import writeFile
 from utils import clearFile
 from string import Template
 
-testes = ["teste1.t", "teste2.t", "teste3.t", "teste4.t", "teste5.t", "teste6.t", "teste7.t", "NULL"]
+html_file = "resultado.html"
+if len(sys.argv) == 2:
+    nome_ficheiro = sys.argv[1]
+else:
+    nome_ficheiro = ""
+    print("Sem ficheiro para analisar.")
+    exit(1)
 
 tokens = ("TOTAL_TESTE", "ESTADO_TESTE", "NUMERO", "DESCRICAO", "COMENTARIO")
 
@@ -18,26 +25,25 @@ states = (
 )
 
 
-def t_TOTAL_TESTE(t):  # 1..41
+def t_TOTAL_TESTE(t):
     r"""[0-9 ]+..[0-9]+"""
     t.value = t.value + "<br>"
     return t
 
 
-def t_COMENTARIO(t):  # # Comentario
-    r"""[ ]*[# ][a-zA-Z0-9:'.() ]+\n"""
-    # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
+def t_COMENTARIO(t):
+    r"""[ ]*[# ][a-zA-Z0-9:'.() ]+\n"""  # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
     t.value = t.value.replace("\n", "<br>")
     return t
 
 
-def t_ESTADO_TESTE(t):  # ok/not ok
+def t_ESTADO_TESTE(t):
     r"""[not ]*ok"""
     t.lexer.begin("numero")
     return t
 
 
-def t_numero_NUMERO(t):  # 1/2/3
+def t_numero_NUMERO(t):
     r"""[0-9]+"""
     t.value = int(t.value)
     t.lexer.begin("descricao")
@@ -52,10 +58,10 @@ def t_descricao_ESTADO_TESTE(t):
     return t
 
 
-def t_descricao_DESCRICAO(t):  # - correu bem
+def t_descricao_DESCRICAO(t):
     r"""[ -]+([a-zA-Z0-9: ]*\n)+|[ -]+|\n"""
     t.lexer.begin("INITIAL")
-    t.value = t.value.replace("\n", "")
+    t.value = t.value.replace("\n", "<br>")
     t.value = t.value.replace(" - ", "")
     return t
 
@@ -89,11 +95,10 @@ t_ignore = "\n"
 t_numero_ignore = " "
 t_descricao_ignore = ""
 
-html_file = "teste.html"
-nome_ficheiro = "testes/teste3.t"
 clearFile(html_file)
-writeFile(html_file, "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anythin"
-                     "g Protocol)</h1>\n<h2>Ficheiro: " + nome_ficheiro + "</h2>\n")
+writeFile(html_file,
+          "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anything Protocol)</h1>\n<h2>Ficheiro: " + nome_ficheiro + "</h2>\n")
+
 lexer = lex.lex()
 lexer.input(readFile(nome_ficheiro))
 
@@ -102,23 +107,17 @@ level = 0
 stage = ""
 
 for token in iter(lexer.token, None):
-    #     writeFile(html_file,
-    #               """\n\t<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(
-    #                   token.value) + " </span>")
+    writeFile(html_file, """\n\t<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(token.value) + " </span>")
     if token.type == "ESTADO_TESTE":
         level = token.value.count('    ') + 1
-        if level == 1:
-            result = token.value
-        else:
-            result = token.value[(level-1)*4:]
+        result = token.value[(level - 1) * 4:]
     if token.type == "NUMERO":
         stage = token.value
     if token.type == "DESCRICAO":
         teste = Test(result, stage, token.value, level)
         lista.append(teste)
 
-    #print(token)
-
+    # print(token)
 
 # Trabalhar o numero de testes executados, numero de testes com
 # resultado positivo e percentagem de falhas;
@@ -127,16 +126,16 @@ contador_testes_positivos = 0
 
 for teste in lista:
     if teste.result == "ok":
-        contador_testes_positivos+=1
+        contador_testes_positivos += 1
     else:
-        contador_testes_negativos+=1
-
+        contador_testes_negativos += 1
 
 print(f"\n\n  RELATORIO DO FICHEIRO: {nome_ficheiro[7:]}")
-print(f". O Numero Total de Testes Executados: {contador_testes_negativos+contador_testes_positivos}")
+print(f". O Numero Total de Testes Executados: {contador_testes_negativos + contador_testes_positivos}")
 print(f". O Numero Total de Testes Positivos: {contador_testes_positivos}")
 print(f". O Numero Total de Testes Negativos: {contador_testes_negativos}")
-print(f". A Percentagem Total de Falhas: %0.2f %% \n" % (contador_testes_negativos/(contador_testes_negativos+contador_testes_positivos) * 100))
+print(f". A Percentagem Total de Falhas: %0.2f %% \n" % (
+            contador_testes_negativos / (contador_testes_negativos + contador_testes_positivos) * 100))
 
 
 def level_return(lista, nivel):
@@ -146,10 +145,10 @@ def level_return(lista, nivel):
     for teste in lista:
         if teste.level == nivel:
             if teste.result == "ok":
-                contador_testes_positivos+=1
+                contador_testes_positivos += 1
             else:
-                contador_testes_negativos+=1
-            contador_nivel+=1
+                contador_testes_negativos += 1
+            contador_nivel += 1
     print("\t\t-----------")
     print(f"\t\t- Nivel {nivel} -")
     print("\t\t-----------")
@@ -159,38 +158,17 @@ def level_return(lista, nivel):
     print(f"\t. A Percentagem de Falhas: %0.2f %% \n" % (
                 contador_testes_negativos / (contador_testes_negativos + contador_testes_positivos) * 100))
 
+
 i = 1
 max_level = 0
 for teste in lista:
     if teste.level > max_level:
         max_level = teste.level
-while i < max_level+1:
+while i < max_level + 1:
     level_return(lista, i)
-    i+=1
+    i += 1
 
-#for teste in lista:
-#    print(f"{teste.result}\t{teste.stage}\t{teste.description}\t{teste.level}")
+# for teste in lista:
+#     print(f"{teste.result}\t{teste.stage}\t{teste.description}\t{teste.level}")
 
 writeFile(html_file, "\n</body>\n</html>")
-
-# i = 0
-
-# while testes[i] != "NULL":
-#     if testes[i] == "NULL":
-#         exit(0)
-#     html_file = testes[i][:-1] + "html"
-#     clearFile(html_file)
-#     writeFile(html_file, "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anythin"
-#                          "g Protocol)</h1>\n<h2>Ficheiro: " + testes[i] + "</h2>\n")
-#     lexer.input(readFile("testes/" + testes[i]))
-#     print(f"\n############ {testes[i]} ############\n")
-#     for token in iter(lexer.token, None):
-#         writeFile(html_file,
-#                   """\n\t<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(
-#                       token.value) + " </span>")
-#         print(token)
-#     for j in range(7):
-#         writeFile(html_file,
-#                   f"""\n<br> </br><a href= """ + html_file + """> """ + testes[j] + """</a>""")
-#     writeFile(html_file, "\n</body>\n</html>")
-#     i += 1
