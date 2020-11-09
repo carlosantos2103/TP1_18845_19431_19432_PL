@@ -1,0 +1,52 @@
+body{
+    overflow: hidden;
+    margin-left: 20%;
+    margin-right: 20%;
+    background-color: #cfd0c4;
+    font-family: Roboto;
+}
+
+.titulo{
+    text-align: center;
+    margin-bottom: 40px;
+    color: #000000;
+    user-select: none;
+}
+
+.container {
+  width: 100%;
+  align-items: center;
+}
+
+.menu {
+    padding: 3px;
+    text-align: center;
+    background-color: #949494;
+    border-radius: 7px;
+    margin-bottom: 10px;
+    height: 35px;
+    width: 100%;
+    overflow: auto;
+    user-select: none;
+}
+
+.menu button {
+    height: 100%;
+    width: 49%;
+    color: black;
+    background-color: unset;
+    border: transparent;
+    font-family: Roboto;
+    font-size: large;
+    display: initial;
+}
+
+.demo{
+    font-size: xx-large;
+    display: none;
+}
+
+.texto{
+    margin: 30px;
+    display: none;
+}

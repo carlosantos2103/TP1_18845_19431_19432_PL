@@ -1,85 +1,13 @@
 # Trabalho_Pratico 1 - PL 2020/21
 # main.py
 
-import ply.lex as lex
 import re
-import sys
-from utils import readFile
 from utils import writeFile
 from utils import clearFile
 from string import Template
+import reader
 
 html_file = "resultado.html"
-if len(sys.argv) == 2:
-    nome_ficheiro = sys.argv[1]
-else:
-    nome_ficheiro = ""
-    print("Sem ficheiro para analisar.")
-    exit(1)
-
-tokens = ("TOTAL_TESTE", "ESTADO_TESTE", "NUMERO", "DESCRICAO", "COMENTARIO")
-
-states = (
-    ("numero", "exclusive"),
-    ("descricao", "exclusive"),
-)
-
-
-def t_TOTAL_TESTE(t):
-    r"""[0-9 ]+..[0-9]+"""
-    t.value = t.value + "<br>"
-    return t
-
-
-def t_COMENTARIO(t):
-    r"""[ ]*[# ][a-zA-Z0-9:'.() ]+\n"""  # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
-    t.value = t.value.replace("\n", "<br>")
-    return t
-
-
-def t_ESTADO_TESTE(t):
-    r"""[not ]*ok"""
-    t.lexer.begin("numero")
-    return t
-
-
-def t_numero_NUMERO(t):
-    r"""[0-9]+"""
-    t.value = int(t.value)
-    t.lexer.begin("descricao")
-    return t
-
-
-def t_descricao_ESTADO_TESTE(t):
-    r"""[ -]*[not ]*ok[ ]"""
-    t.value = t.value[:-1]
-    t.value = t.value.replace(" - ", "")
-    t.lexer.begin("numero")
-    return t
-
-
-def t_descricao_DESCRICAO(t):
-    r"""[ -]+([a-zA-Z0-9: ]*\n)+|[ -]+|\n"""
-    t.lexer.begin("INITIAL")
-    t.value = t.value.replace("\n", "<br>")
-    t.value = t.value.replace(" - ", "")
-    return t
-
-
-def t_error(t):
-    print("ERROR: \n" + t.value)
-    exit(1)
-
-
-def t_descricao_error(t):
-    print("ERROR descricao: \n" + t.value)
-    exit(1)
-
-
-def t_numero_error(t):
-    print("ERROR numero: \n" + t.value)
-    exit(1)
-
 
 class Test:
     def __init__(self, resultado="tba", numero=0, description="tba", nivel=0):
@@ -91,23 +19,16 @@ class Test:
 
 lista = []
 
-t_ignore = "\n"
-t_numero_ignore = " "
-t_descricao_ignore = ""
-
-clearFile(html_file)
-writeFile(html_file,
-          "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anything Protocol)</h1>\n<h2>Ficheiro: " + nome_ficheiro + "</h2>\n")
-
-lexer = lex.lex()
-lexer.input(readFile(nome_ficheiro))
+# clearFile(html_file)
+# writeFile(html_file,
+          # "<!DOCTYPE html>\n<html>\n<head>\n<title>TAP</title>\n</head>\n<body>\n<h1>TAP (Test Anything Protocol)</h1>\n<h2>Ficheiro: " + nome_ficheiro + "</h2>\n")
 
 result = ""
 level = 0
 stage = ""
 
-for token in iter(lexer.token, None):
-    writeFile(html_file, """\n\t<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(token.value) + " </span>")
+for token in iter(reader.lexer.token, None):
+    # writeFile(html_file, """\n\t<span style="margin-left:""" + str(str(token.value).count('    ') * 2) + """em">""" + str(token.value) + " </span>")
     if token.type == "ESTADO_TESTE":
         level = token.value.count('    ') + 1
         result = token.value[(level - 1) * 4:]
@@ -130,7 +51,7 @@ for teste in lista:
     else:
         contador_testes_negativos += 1
 
-print(f"\n\n  RELATORIO DO FICHEIRO: {nome_ficheiro[7:]}")
+print(f"\n\n  RELATORIO DO FICHEIRO: {reader.nome_ficheiro[7:]}")
 print(f". O Numero Total de Testes Executados: {contador_testes_negativos + contador_testes_positivos}")
 print(f". O Numero Total de Testes Positivos: {contador_testes_positivos}")
 print(f". O Numero Total de Testes Negativos: {contador_testes_negativos}")
@@ -171,4 +92,4 @@ while i < max_level + 1:
 # for teste in lista:
 #     print(f"{teste.result}\t{teste.stage}\t{teste.description}\t{teste.level}")
 
-writeFile(html_file, "\n</body>\n</html>")
+# writeFile(html_file, "\n</body>\n</html>")
