@@ -41,9 +41,11 @@ body{
     display: initial;
 }
 
-.demo{
+.label{
     font-size: xx-large;
     display: none;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .texto{
