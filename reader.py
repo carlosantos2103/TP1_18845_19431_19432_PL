@@ -1,56 +1,60 @@
 import ply.lex as lex
 import sys
+import os
 from utils import readFile
 
-if len(sys.argv) == 2:
-    nome_ficheiro = sys.argv[1]
+content = {}
+if len(sys.argv) == 2 and os.path.isfile(sys.argv[1]):  # os.path.splitext(base)[0] | os.path.basename()
+    content[os.path.basename(sys.argv[1])] = (readFile(sys.argv[1]))
+elif len(sys.argv) == 2 and os.path.isdir(sys.argv[1]):
+    for file in os.listdir(sys.argv[1]):
+        content[file]=(readFile(sys.argv[1]+"/"+file))
 else:
-    nome_ficheiro = ""
-    print("Sem ficheiro para analisar.")
+    print("Sem ficheiro(s) para analisar.")
     exit(1)
 
-tokens = ("TOTAL_TESTE", "ESTADO_TESTE", "NUMERO", "DESCRICAO", "COMENTARIO")
+tokens = ("TOTAL_STAGES", "RESULT", "STAGE", "DESCRIPTION", "COMMENT")
 
 states = (
-    ("numero", "exclusive"),
-    ("descricao", "exclusive"),
+    ("stage", "exclusive"),
+    ("description", "exclusive"),
 )
 
 
-def t_TOTAL_TESTE(t):
+def t_TOTAL_STAGES(t):
     r"""[0-9 ]+..[0-9]+"""
     t.value = t.value + "<br>"
     return t
 
 
-def t_COMENTARIO(t):
+def t_COMMENT(t):
     r"""[ ]*[# ][a-zA-Z0-9:'.() ]+\n"""  # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
     t.value = t.value.replace("\n", "<br>")
     return t
 
 
-def t_ESTADO_TESTE(t):
+def t_RESULT(t):
     r"""[not ]*ok"""
-    t.lexer.begin("numero")
+    t.lexer.begin("stage")
     return t
 
 
-def t_numero_NUMERO(t):
+def t_stage_STAGE(t):
     r"""[0-9]+"""
     t.value = int(t.value)
-    t.lexer.begin("descricao")
+    t.lexer.begin("description")
     return t
 
 
-def t_descricao_ESTADO_TESTE(t):
+def t_description_RESULT(t):
     r"""[ -]*[not ]*ok[ ]"""
     t.value = t.value[:-1]
     t.value = t.value.replace(" - ", "")
-    t.lexer.begin("numero")
+    t.lexer.begin("stage")
     return t
 
 
-def t_descricao_DESCRICAO(t):
+def t_description_DESCRIPTION(t):
     r"""[ -]+([a-zA-Z0-9: ]*\n)+|[ -]+|\n"""
     t.lexer.begin("INITIAL")
     t.value = t.value.replace("\n", "<br>")
@@ -63,19 +67,18 @@ def t_error(t):
     exit(1)
 
 
-def t_descricao_error(t):
-    print("ERROR descricao: \n" + t.value)
+def t_description_error(t):
+    print("ERROR description: \n" + t.value)
     exit(1)
 
 
-def t_numero_error(t):
-    print("ERROR numero: \n" + t.value)
+def t_stage_error(t):
+    print("ERROR stage: \n" + t.value)
     exit(1)
 
 
 t_ignore = "\n"
-t_numero_ignore = " "
-t_descricao_ignore = ""
+t_stage_ignore = " "
+t_description_ignore = ""
 
 lexer = lex.lex()
-lexer.input(readFile(nome_ficheiro))

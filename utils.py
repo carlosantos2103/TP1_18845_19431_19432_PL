@@ -8,7 +8,7 @@ def readFile(file_name):
 
 
 def clearFile(file_name):
-    open(file_name, 'w').close()
+    open(file_name, 'w+').close()
 
 
 def writeFile(file_name, content):
