@@ -23,13 +23,11 @@ states = (
 
 def t_TOTAL_STAGES(t):
     r"""[0-9 ]+..[0-9]+"""
-    t.value = t.value + "<br>"
     return t
 
 
 def t_COMMENT(t):
-    r"""[ ]*[# ][a-zA-Z0-9:'.() ]+\n"""  # TODO: adicionar? ([ ]*[# ][a-zA-Z0-9:'. ]+\n)* - para ler tudo no mesmo token (teste4)
-    t.value = t.value.replace("\n", "<br>")
+    r"""[ ]*\#[ ][^\n]+\n([ ]*\#[ ][^\n]+\n)*"""
     return t
 
 

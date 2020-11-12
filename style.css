@@ -5,14 +5,6 @@ body{
     min-width: 1000px;
 }
 
-.icon {
-    width:240px;
-    height:180px;
-    margin-left: 18%;
-    position: absolute;
-    top: 0px;
-}
-
 .title{
     margin-top: 2%;
     text-align: center;
@@ -32,6 +24,7 @@ body{
 
 .file{
     margin-left: 18%;
+    user-select: none;
 }
 
 .container {
@@ -42,27 +35,35 @@ body{
     margin-bottom: 4%;
     padding: 10px;
     position: relative;
-    min-height: 77vh;
-    box-shadow: 6px 5px 5px rgba(153, 153, 153, 0.3);
+    min-height: 71vh;
+    box-shadow: 6px 5px 5px rgba(153, 153, 153, 0.4);
 }
 
 .menu {
     text-align: center;
+    align-items: center;
     background-color: #949494;
     border-radius: 7px;
     margin-bottom: 20px;
     height: 35px;
     user-select: none;
+    display: flex;
 }
 
 .menu button {
     height: 100%;
     color: black;
+    text-shadow: 4px 2px 10px dimgray;
     background-color: unset;
     border: transparent;
-    font-family: Roboto;
     font-size: large;
-    display: initial;
+    overflow: hidden;
+}
+
+.results {
+    margin-left: 16px;
+    margin-bottom: 15px;
+    font-size: large;
 }
 
 .label{
@@ -83,5 +84,9 @@ body{
 }
 
 .results {
-    margin-bottom: 50%;
+}
+
+.com {
+    margin: 8px;
+    padding-left: 5px;
 }
