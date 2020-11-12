@@ -16,3 +16,11 @@ function openMenu(){
         document.getElementById("texto").style.display= "none";
     }
 }
+
+function viewDesc(){
+    document.getElementById("desc").style.display = "inline";
+}
+
+function closeDesc(){
+    document.getElementById("desc").style.display = "none";
+}

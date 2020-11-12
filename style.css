@@ -1,38 +1,62 @@
 body{
-    overflow: hidden;
-    margin-left: 20%;
-    margin-right: 20%;
-    background-color: #cfd0c4;
+    overflow: auto;
+    background-color: #f1f1f1;
     font-family: Roboto;
+    min-width: 1000px;
 }
 
-.titulo{
+.icon {
+    width:240px;
+    height:180px;
+    margin-left: 18%;
+    position: absolute;
+    top: 0px;
+}
+
+.title{
+    margin-top: 2%;
     text-align: center;
-    margin-bottom: 40px;
     color: #000000;
     user-select: none;
+    font-size: xx-large;
+    text-shadow: 2px 2px rgba(38, 38, 38, 0.2);
+}
+
+.title2{
+    text-align: center;
+    margin-bottom: 45px;
+    color: #000000;
+    user-select: none;
+    font-size: large;
+}
+
+.file{
+    margin-left: 18%;
 }
 
 .container {
-  width: 100%;
-  align-items: center;
+    background-color: white;
+    align-items: center;
+    margin-left: 18%;
+    margin-right: 18%;
+    margin-bottom: 4%;
+    padding: 10px;
+    position: relative;
+    min-height: 77vh;
+    box-shadow: 6px 5px 5px rgba(153, 153, 153, 0.3);
 }
 
 .menu {
-    padding: 3px;
     text-align: center;
     background-color: #949494;
     border-radius: 7px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     height: 35px;
-    width: 100%;
-    overflow: auto;
     user-select: none;
 }
 
 .menu button {
     height: 100%;
-    width: 49%;
     color: black;
     background-color: unset;
     border: transparent;
@@ -51,4 +75,13 @@ body{
 .texto{
     margin: 30px;
     display: none;
+}
+
+.test {
+    padding: 10px;
+    font-size: large;
+}
+
+.results {
+    margin-bottom: 50%;
 }

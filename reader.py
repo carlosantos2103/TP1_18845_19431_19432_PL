@@ -57,7 +57,7 @@ def t_description_RESULT(t):
 def t_description_DESCRIPTION(t):
     r"""[ -]+([a-zA-Z0-9: ]*\n)+|[ -]+|\n"""
     t.lexer.begin("INITIAL")
-    t.value = t.value.replace("\n", "<br>")
+    t.value = t.value.replace("\n", "")
     t.value = t.value.replace(" - ", "")
     return t
 

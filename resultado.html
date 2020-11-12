@@ -5,27 +5,28 @@
                   rel="stylesheet">
             <link href="style.css" rel="stylesheet" type="text/css">
             <script src="result.js"></script>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Test Anything Protocol</title>
         </head>
         <body>
-            <h1 class="titulo">Resultados TAP</h1>
-            <h2 class="ficheiro">Ficheiro testado: {{ variable }}</h2>
+            <img class="icon" src="est.png" alt="EST">
+            <h1 class="title">Resultados TAP</h1>
+            <h2 class="title2">Test Anything Protocol</h2>
 
 
-        <div class="container">
-            <div id="menu" class="menu">
-                <button id="botao" onclick="onClick()" type="button">Ficheiro 1</button>
-                <button id="botao2" onclick="openMenu()" type="button">Expandir</button>
+            <div class="container">
+                <div id="menu" class="menu">
+                    <button id="botao" onclick="onClick()" type="button">Ficheiro 1</button>
+                </div>
+                <div id="texto" class="texto">
+                    Isto e um texto para fazer um teste.<br>
+                    Teste<br>
+                    TESTE<br>
+                </div>
+                <span onmouseenter="viewDesc()">das</span>
+
+                <p id="label" class="label"></p>
+
             </div>
-        </div>
-
-        <div id="texto" class="texto">
-            Isto e um texto para fazer um teste.<br>
-            Teste<br>
-            TESTE<br>
-        </div>
-
-        <p id="label" class="label"></p>
-
         </body>
 </html>
