@@ -4,7 +4,7 @@ import os
 from utils import readFile
 
 content = {}
-if len(sys.argv) == 2 and os.path.isfile(sys.argv[1]):  # os.path.splitext(base)[0] | os.path.basename()
+if len(sys.argv) == 2 and os.path.isfile(sys.argv[1]):
     content[os.path.basename(sys.argv[1])] = (readFile(sys.argv[1]))
 elif len(sys.argv) == 2 and os.path.isdir(sys.argv[1]):
     for file in os.listdir(sys.argv[1]):

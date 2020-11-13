@@ -60,6 +60,17 @@ body{
     overflow: hidden;
 }
 
+button.button2 {
+    height: 100%;
+    color: black;
+    text-shadow: 4px 2px 10px dimgray;
+    background-color: unset;
+    border: transparent;
+    font-size: large;
+    overflow: hidden;
+    display: inline;
+}
+
 .results {
     margin-left: 16px;
     margin-bottom: 15px;

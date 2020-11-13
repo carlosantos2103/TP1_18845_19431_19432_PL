@@ -72,7 +72,7 @@ for file in reader.content:
     total_tests = 0
     for token in iter(reader.lexer.token, None):
         if token.type == "TOTAL_STAGES":
-            captures = re.fullmatch(r"""[ ]*[0-9]+..([0-9]+)""", token.value)
+            captures = re.fullmatch(r"""[ ]*[0-9]+..([0-9])+""", token.value)
             total_tests += int(captures.group(1))
         elif token.type == "RESULT":
             lvl = token.value.count('    ') + 1
@@ -88,8 +88,10 @@ for file in reader.content:
             stg = ""
             com = ""
             test_list.append(test)
+
     if total_tests != len(test_list):
-        print("ERRO")
+        writeFile(html_file, """\n<div>\n<span style=color:red;font-size:large;margin:2em;><i>Não foi possível apresentar resutlados para este ficheiro.</i></span>\n</div>\n</body>\n</html>""")
+        continue
 
     addSumm()
 
@@ -110,6 +112,44 @@ for file in reader.content:
 
     writeFile(html_file, "\n</div>\n" + addScript() + "\n</body>\n</html>")
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+clearFile("resultado.html")
+writeFile("resultado.html",
+            """<!DOCTYPE html>\n<html>\n<head>\n<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+            <link href="style.css" rel="stylesheet" type="text/css">
+            <title>Test Anything Protocol</title>
+            </head>\n<body>\n<h1 class="title">Resultados TAP</h1>\n<h2 class="title2">Test Anything Protocol</h2>\n<div class="container">\n<div id="menu" class="menu">""")
+
+i=1
+for f in reader.content:
+    writeFile("resultado.html",
+              "\n<button style=width:" + str(100/len(reader.content)) + """% type="button2" class="button2" onclick="window.location.href='resultados/result_""" + f[:-2] + """.html';">Ficheiro""" + str(i) + "</button>")
+    i += 1
+
+writeFile("resultado.html", "\n</div>\n</div>\n</body>\n</html>")
 
 
 
