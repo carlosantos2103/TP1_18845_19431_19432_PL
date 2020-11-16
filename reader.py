@@ -44,14 +44,6 @@ def t_stage_STAGE(t):
     return t
 
 
-def t_description_RESULT(t):
-    r"""[ -]*[not ]*ok[ ]"""
-    t.value = t.value[:-1]
-    t.value = t.value.replace(" - ", "")
-    t.lexer.begin("stage")
-    return t
-
-
 def t_description_DESCRIPTION(t):
     r"""[ -]+([a-zA-Z0-9: ]*\n)+|[ -]+|\n"""
     t.lexer.begin("INITIAL")
