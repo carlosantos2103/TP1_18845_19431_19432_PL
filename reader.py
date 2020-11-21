@@ -53,17 +53,17 @@ def t_description_DESCRIPTION(t):
 
 
 def t_error(t):
-    print("ERROR: \n" + t.value)
+    print("ERRO no reconhecimento do conteúdo do ficheiro.")
     exit(1)
 
 
 def t_description_error(t):
-    print("ERROR description: \n" + t.value)
+    print("ERRO no reconhecimento do conteúdo do ficheiro.")
     exit(1)
 
 
 def t_stage_error(t):
-    print("ERROR stage: \n" + t.value)
+    print("ERRO no reconhecimento do conteúdo do ficheiro.")
     exit(1)
 
 

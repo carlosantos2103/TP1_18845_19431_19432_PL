@@ -80,3 +80,18 @@ def write_HTML(html_file, test_list, verif, file):
         i += 1
 
     writeFile(html_file, "\n</div>\n" + addScript(test_list) + "\n</body>\n</html>")
+
+clearFile("resultado.html")
+writeFile("resultado.html",
+            """<!DOCTYPE html>\n<html>\n<head>\n<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+            <link href="style.css" rel="stylesheet" type="text/css">
+            <title>Test Anything Protocol</title>
+            </head>\n<body>\n<h1 class="title">Resultados TAP</h1>\n<h2 class="title2">Test Anything Protocol</h2>\n<div class="container">\n<div id="menu" class="menu">""")
+
+i=1
+for f in content:
+    writeFile("resultado.html",
+              "\n<button style=width:" + str(100/len(content)) + """% type="button" class="button" onclick="window.location.href='resultados/result_""" + f[:-2] + """.html';">Ficheiro""" + str(i) + "</button>")
+    i += 1
+
+writeFile("resultado.html", "\n</div>\n</div>\n</body>\n</html>")
